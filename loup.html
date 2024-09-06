@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feuille de Route - Loup Solitaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: calc(100% - 70px);
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .adjust-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .adjust-container input[type="number"] {
+            width: calc(100% - 80px); /* Ajuste la largeur pour les boutons */
+            margin-right: 10px;
+        }
+        button {
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .minus {
+            background: #dc3545;
+        }
+        .plus {
+            background: #28a745;
+        }
+        .selected-list {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .save-button:hover {
+            background: #0056b3;
+        }
+        .dice-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background: #ffc107;
+            color: #343a40;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .dice-button:hover {
+            background: #e0a800;
+        }
+        .dice-result {
+            text-align: center;
+            font-size: 4rem; /* Augmenter la taille du résultat du dé */
+            margin-top: 1rem;
+            color: #007bff;
+        }
+         .dice-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px; /* Augmenter la hauteur */
+    width: 150px;  /* Augmenter la largeur */
+    margin: 20px auto;
+    font-size: 72px;
+}
+
+.dice-face {
+    width: 150px;  /* Augmenter la largeur */
+    height: 150px; /* Augmenter la hauteur */
+    font-size: 72px; /* Augmenter la taille de la police */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Feuille de Route - Loup Solitaire</h1>
+        <form id="feuille-de-route">
+            <div class="form-group">
+                <label for="nom">Nom du Personnage</label>
+                <input type="text" id="nom" name="nom">
+            </div>
+            <div class="form-group">
+                <label for="habilite-base">Score de Base (Habilité)</label>
+                <div class="adjust-container">
+                    <input type="number" id="habilite-base" name="habilite-base" min="0">
+                    <button type="button" class="minus" onclick="adjustValue('habilite-base', -1)">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('habilite-base', 1)">+</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endurance-base">Score de Base (Endurance)</label>
+                <div class="adjust-container">
+                    <input type="number" id="endurance-base" name="endurance-base" min="0">
+                    <button type="button" class="minus" onclick="adjustValue('endurance-base', -1)">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('endurance-base', 1)">+</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="disciplines">Disciplines Kaï</label>
+                <select id="disciplines" name="disciplines" multiple onchange="updateSelectedList('disciplines', 'selected-disciplines')">
+                    <option value="Maîtrise des Armes">Maîtrise des Armes</option>
+                    <option value="Bouclier Psychique">Bouclier Psychique</option>
+                    <option value="Guérison">Guérison</option>
+                    <option value="Camouflage">Camouflage</option>
+                    <option value="Sixième Sens">Sixième Sens</option>
+                    <option value="Chasse">Chasse</option>
+                    <option value="Communication Animale">Communication Animale</option>
+                    <option value="Puissance Psychique">Puissance Psychique</option>
+                    <option value="Sens Magnétique">Sens Magnétique</option>
+                    <option value="Maîtrise de l'Esprit">Maîtrise de l'Esprit</option>
+                </select>
+                <div id="selected-disciplines" class="selected-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="armes">Armes (max 2)</label>
+                <select id="armes" name="armes" multiple onchange="updateSelectedList('armes', 'selected-armes'); checkArmesLimit();">
+                    <option value="Épée">Épée</option>
+                    <option value="Hache">Hache</option>
+                    <option value="Lance">Lance</option>
+                    <option value="Dague">Dague</option>
+                    <option value="Arc">Arc</option>
+                </select>
+                <div id="selected-armes" class="selected-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="objets-speciaux">Objets Spéciaux</label>
+                <textarea id="objets-speciaux" name="objets-speciaux" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="sac-a-dos">Sac à Dos</label>
+                <textarea id="sac-a-dos" name="sac-a-dos" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="vivres">Vivres</label>
+                <div class="adjust-container">
+                    <input type="number" id="vivres" name="vivres" min="0">
+                    <button type="button" class="minus" onclick="adjustValue('vivres', -1)">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('vivres', 1)">+</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="bourse">Bourse</label>
+                <div class="adjust-container">
+                    <input type="number" id="bourse" name="bourse" min="0">
+                    <button type="button" class="minus" onclick="adjustValue('bourse', -1)">-</button>
+                    <button type="button" class="plus" onclick="adjustValue('bourse', 1)">+</button>
+                </div>
+            </div>
+            <button type="button" class="save-button" onclick="saveData()">Enregistrer</button>
+            <button type="button" class="dice-button" onclick="rollDice()">Lancer le Dé</button>
+            <div id="dice-result" class="dice-result"></div>
+            <div id="dice-animation" class="dice-animation"></div></form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            loadData();
+            updateSelectedList('disciplines', 'selected-disciplines');
+            updateSelectedList('armes', 'selected-armes');
+        });
+
+        function saveData() {
+            const form = document.getElementById('feuille-de-route');
+            const data = new FormData(form);
+            for (let [key, value] of data.entries()) {
+                if (form[key].tagName === 'SELECT' && form[key].multiple) {
+                    value = [...form[key].options].filter(option => option.selected).map(option => option.value).join(',');
+                }
+                localStorage.setItem(key, value);
+            }
+            alert('Données enregistrées');
+        }
+
+        function loadData() {
+            const form = document.getElementById('feuille-de-route');
+            for (let element of form.elements) {
+                const value = localStorage.getItem(element.name);
+                if (value) {
+                    if (element.tagName === 'SELECT' && element.multiple) {
+                        const selectedValues = value.split(',');
+                        for (let option of element.options) {
+                            option.selected = selectedValues.includes(option.value);
+                        }
+                    } else {
+                        element.value = value;
+                    }
+                }
+            }
+        }
+
+        function adjustValue(id, change) {
+            const input = document.getElementById(id);
+            let currentValue = parseInt(input.value, 10) || 0;
+            const amount = parseInt(prompt("Combien voulez-vous ajouter/enlever ?", "1"), 10) || 0;
+            input.value = currentValue + (change * amount);
+        }
+
+        function updateSelectedList(selectId, listId) {
+            const select = document.getElementById(selectId);
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+            const selectedOptions = [...select.options].filter(option => option.selected);
+            selectedOptions.forEach(option => {
+                const item = document.createElement('div');
+                item.textContent = option.text;
+                list.appendChild(item);
+            });
+        }
+
+        function checkArmesLimit() {
+            const select = document.getElementById('armes');
+            const selectedOptions = [...select.options].filter(option => option.selected);
+            if (selectedOptions.length > 2) {
+                alert('Vous ne pouvez sélectionner que 2 armes.');
+                selectedOptions.forEach(option => option.selected = false);
+            }
+        }
+
+        function rollDice() {
+            const diceAnimation = document.getElementById('dice-animation');
+            const diceResult = document.getElementById('dice-result');
+
+            diceAnimation.innerHTML = '';
+            diceResult.textContent = '';
+
+            const diceFaces = [
+                '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'
+            ];
+
+            let animationInterval = setInterval(() => {
+                const randomFace = diceFaces[Math.floor(Math.random() * diceFaces.length)];
+                diceAnimation.textContent = randomFace;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(animationInterval);
+                const result = Math.floor(Math.random() * 6) + 1;
+                diceResult.textContent = ''; // Texte supprimé
+                diceAnimation.textContent = diceFaces[result - 1];
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
